@@ -1,4 +1,4 @@
-package views;
+package com.hotelAlura.views;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -25,7 +25,6 @@ public class MenuPrincipal extends JFrame {
 
 	/**
 	 * Launch the application.
-	 * GitHub Test
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
