@@ -11,5 +11,7 @@
 	<classpathentry kind="lib" path="C:/Users/Daniel/Desktop/Programacion/Oracle/Jcalendar/lib/jgoodies-looks-2.4.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Daniel/Desktop/Programacion/Oracle/Jcalendar/lib/junit-4.6.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files (x86)/MySQL/Connector J 8.0/mysql-connector-j-8.0.33.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniel/Desktop/Programacion/Oracle/Challenges/3.- Hotal Alura latam/JARS/c3p0-0.9.5.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniel/Desktop/Programacion/Oracle/Challenges/3.- Hotal Alura latam/JARS/mchange-commons-java-0.2.16.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
