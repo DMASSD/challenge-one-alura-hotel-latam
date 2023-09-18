@@ -21,9 +21,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Login extends JFrame {
 
@@ -83,7 +83,7 @@ public class Login extends JFrame {
 		JLabel imgHotel = new JLabel("");
 		imgHotel.setBounds(0, 0, 304, 538);
 		panel_1.add(imgHotel);
-		imgHotel.setIcon(new ImageIcon(Login.class.getResource("/imagenes/img-hotel-login-.png")));
+		imgHotel.setIcon(new ImageIcon(Login.class.getResource("/com/hotelAlura/imagenes/img-hotel-login-.png")));
 		
 		JPanel btnexit = new JPanel();
 		btnexit.setBounds(251, 0, 53, 36);
@@ -199,7 +199,7 @@ public class Login extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Login();
+				TryLogin();
 			}
 		});
 		btnLogin.setBackground(SystemColor.textHighlight);
@@ -217,7 +217,7 @@ public class Login extends JFrame {
 		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setIcon(new ImageIcon(Login.class.getResource("/imagenes/lOGO-50PX.png")));
+		lblNewLabel_1.setIcon(new ImageIcon(Login.class.getResource("/com/hotelAlura/imagenes/lOGO-50PX.png")));
 		lblNewLabel_1.setBounds(65, 65, 48, 59);
 		panel.add(lblNewLabel_1);
 		
@@ -241,23 +241,43 @@ public class Login extends JFrame {
 		header.setLayout(null);
 	}
 	
-	private void Login() { //TODO
+	private void TryLogin() {
+
+		String usuario = txtUsuario.getText();
+		String contrase = new String (txtContrasena.getPassword());
 				
-		 String Usuario= "admin";
-	     String Contraseña="admin";
-
-	        String contrase=new String (txtContrasena.getPassword());
-
-	        if(txtUsuario.getText().equals(Usuario) &&
-	        	contrase.equals(Contraseña)){
-	        	
-	            MenuUsuario menu = new MenuUsuario();
-	            menu.setVisible(true);
-	            dispose();	 
-	            
-	        }else {
-	            JOptionPane.showMessageDialog(this, "Usuario o Contraseña no válidos");
-	        }
+		try(Connection con = new ConnectionFactory().recuperaConexion();) {
+			final PreparedStatement statement = con.prepareStatement(
+					"SELECT contrasena FROM acceso_empleados WHERE "
+					+ "nombre_de_usuario = ?");
+			
+			try(statement){
+				statement.setString(1, usuario);
+				
+				boolean result = statement.execute();
+				
+				if (result) {
+					ResultSet resultSet = statement.getResultSet();
+					
+					if (resultSet.next() && contrase.equals(resultSet.getString("contrasena"))) {
+						resultSet.close();
+						MenuUsuario menu = new MenuUsuario();
+			            menu.setVisible(true);
+			            dispose();
+			            
+					}else {
+			            JOptionPane.showMessageDialog(this, "Usuario o Contraseña no válidos");
+					}
+					resultSet.close();
+					
+				}else {
+		            JOptionPane.showMessageDialog(this, "Error en la base de datos, intentar mas tarde.");
+				}
+				
+			}
+			
+		} catch (Exception e) {	}
+	        
 	} 
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
 	        xMouse = evt.getX();
