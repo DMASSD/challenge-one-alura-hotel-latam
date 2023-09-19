@@ -10,16 +10,24 @@ import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JTextField;
+
+import com.hotelAlura.factory.ConnectionFactory;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+
+import java.text.DecimalFormat;
 import java.text.Format;
+import java.util.Date;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.Toolkit;
 import java.beans.PropertyChangeListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.beans.PropertyChangeEvent;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
@@ -159,9 +167,14 @@ public class ReservasView extends JFrame {
 		btnexit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				MenuPrincipal principal = new MenuPrincipal();
-				principal.setVisible(true);
-				dispose();
+				int opcion = JOptionPane.showConfirmDialog(
+			            null,
+			            "¿Desea cerrar el programa?", 
+			            "Confirmar Cierre",
+			            JOptionPane.YES_NO_OPTION
+			        );
+
+			    if (opcion == JOptionPane.YES_OPTION) {System.exit(0);}
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -244,6 +257,17 @@ public class ReservasView extends JFrame {
 		
 		
 		//Campos que guardaremos en la base de datos
+		txtValor = new JTextField("");
+		txtValor.setHorizontalAlignment(SwingConstants.CENTER);
+		txtValor.setForeground(Color.RED);
+		txtValor.setBackground(Color.WHITE);
+		txtValor.setBounds(68, 328, 289, 33);
+		txtValor.setEditable(false);
+		txtValor.setFont(new Font("Roboto Black", Font.BOLD, 17));
+		txtValor.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		panel.add(txtValor);
+		txtValor.setColumns(10);
+		
 		txtFechaEntrada = new JDateChooser();
 		txtFechaEntrada.getCalendarButton().setBackground(SystemColor.textHighlight);
 		txtFechaEntrada.getCalendarButton().setIcon(new ImageIcon(ReservasView.class.getResource("/com/hotelAlura/imagenes/icon-reservas.png")));
@@ -265,25 +289,80 @@ public class ReservasView extends JFrame {
 		txtFechaSalida.setFont(new Font("Roboto", Font.PLAIN, 18));
 		txtFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				//Activa el evento, después del usuario seleccionar las fechas se debe calcular el valor de la reserva
+				
+				if ("date".equals(evt.getPropertyName())) {
+		            Date fechaEntrada = txtFechaEntrada.getDate();
+		            Date fechaSalida = txtFechaSalida.getDate();
+		            double precioGeneral;
+		            double precioAjustado;
+		            long diasHospedados;
+		            
+		            if (fechaEntrada != null && fechaSalida != null) {
+		                if(fechaSalida.after(fechaEntrada)) {
+
+        			        diasHospedados = (fechaSalida.getTime() - fechaEntrada.getTime())/(24 * 60 * 60 * 1000) + 1;
+		                	
+		                	try(Connection con = new ConnectionFactory().recuperaConexion();) {
+		                		
+		                		final PreparedStatement statement = con.prepareStatement(
+		                				"SELECT precio FROM precios_reservas WHERE id = 1");
+		                		
+		                		try(statement) {
+		                			
+		                			boolean result = statement.execute();
+			                		
+			                		if (result) {
+			                			
+			                			final ResultSet resulset = statement.getResultSet();
+			                			
+			                			try(resulset) {
+			                				
+			                				if (resulset.next()) {
+			                					
+			                					precioGeneral = Double.parseDouble(resulset.getString("precio"));
+			                					
+			                					if (diasHospedados < 3) {precioAjustado = precioGeneral * 1.1;} 
+				    		                	else if (diasHospedados >= 3 && diasHospedados <= 6) {precioAjustado = precioGeneral;} 
+				    		                	else {precioAjustado = precioGeneral * .85;}  
+			                					
+			                					double totalAPagar = (diasHospedados * precioAjustado);
+			                					
+			                					DecimalFormat formatoDinero = new DecimalFormat("#,###.##");
+			                			        String numeroFormateado = formatoDinero.format(totalAPagar);
+			                					txtValor.setText("$ " + numeroFormateado);
+			                					
+											}
+											
+										}
+											
+									}else {
+										JOptionPane.showMessageDialog(null, "Error en la consulta con la base de datos,"
+												+ " contactar con soporte");
+									}
+									
+								}
+								
+							} catch (Exception e) {	}
+			                
+		                }else {
+		                	String mensaje = "La fecha de entrada no puede ser mayor a la fecha de salida";
+		                    JOptionPane.showMessageDialog(null, mensaje, "Advertencia", JOptionPane.WARNING_MESSAGE);
+		                	txtValor.setText("");
+		                }
+		            	
+		            } else {
+		            	String mensaje = "Formato no valido";
+	                    JOptionPane.showMessageDialog(null, mensaje, "Advertencia", JOptionPane.WARNING_MESSAGE);
+	                	txtValor.setText("");
+		            }
+		            
+		        }
 			}
 		});
 		txtFechaSalida.setDateFormatString("yyyy-MM-dd");
 		txtFechaSalida.getCalendarButton().setBackground(SystemColor.textHighlight);
 		txtFechaSalida.setBorder(new LineBorder(new Color(255, 255, 255), 0));
 		panel.add(txtFechaSalida);
-
-		txtValor = new JTextField();
-		txtValor.setBackground(SystemColor.text);
-		txtValor.setHorizontalAlignment(SwingConstants.CENTER);
-		txtValor.setForeground(Color.BLACK);
-		txtValor.setBounds(78, 328, 43, 33);
-		txtValor.setEditable(false);
-		txtValor.setFont(new Font("Roboto Black", Font.BOLD, 17));
-		txtValor.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		panel.add(txtValor);
-		txtValor.setColumns(10);
-
 
 		txtFormaPago = new JComboBox();
 		txtFormaPago.setBounds(68, 417, 289, 38);

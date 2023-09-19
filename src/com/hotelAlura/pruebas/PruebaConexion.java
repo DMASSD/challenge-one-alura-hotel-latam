@@ -2,6 +2,8 @@ package com.hotelAlura.pruebas;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+
 import com.hotelAlura.factory.ConnectionFactory;
 
 public class PruebaConexion {
