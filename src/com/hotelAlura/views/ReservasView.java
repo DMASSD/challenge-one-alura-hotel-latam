@@ -104,13 +104,13 @@ public class ReservasView extends JFrame {
 		JLabel lblCheckIn = new JLabel("FECHA DE CHECK IN");
 		lblCheckIn.setForeground(SystemColor.textInactiveText);
 		lblCheckIn.setBounds(68, 136, 169, 14);
-		lblCheckIn.setFont(new Font("Roboto Black", Font.PLAIN, 18));
+		lblCheckIn.setFont(new Font("Roboto Black", Font.PLAIN, 16));
 		panel.add(lblCheckIn);
 		
 		JLabel lblCheckOut = new JLabel("FECHA DE CHECK OUT");
 		lblCheckOut.setForeground(SystemColor.textInactiveText);
 		lblCheckOut.setBounds(68, 221, 187, 14);
-		lblCheckOut.setFont(new Font("Roboto Black", Font.PLAIN, 18));
+		lblCheckOut.setFont(new Font("Roboto Black", Font.PLAIN, 16));
 		panel.add(lblCheckOut);
 		
 		JLabel lblFormaPago = new JLabel("FORMA DE PAGO");
@@ -122,7 +122,7 @@ public class ReservasView extends JFrame {
 		JLabel lblTitulo = new JLabel("SISTEMA DE RESERVAS");
 		lblTitulo.setBounds(109, 60, 219, 42);
 		lblTitulo.setForeground(new Color(12, 138, 199));
-		lblTitulo.setFont(new Font("Roboto", Font.BOLD, 20));
+		lblTitulo.setFont(new Font("Roboto", Font.BOLD, 18));
 		panel.add(lblTitulo);
 		
 		JPanel panel_1 = new JPanel();
@@ -145,7 +145,7 @@ public class ReservasView extends JFrame {
 		JLabel lblValor = new JLabel("VALOR DE LA RESERVA");
 		lblValor.setForeground(SystemColor.textInactiveText);
 		lblValor.setBounds(72, 303, 196, 14);
-		lblValor.setFont(new Font("Roboto Black", Font.PLAIN, 18));
+		lblValor.setFont(new Font("Roboto Black", Font.PLAIN, 16));
 		panel.add(lblValor);
 		
 		JSeparator separator_1 = new JSeparator();
@@ -236,10 +236,11 @@ public class ReservasView extends JFrame {
 		labelAtras.setFont(new Font("Roboto", Font.PLAIN, 23));
 		
 		JLabel lblSiguiente = new JLabel("SIGUIENTE");
+		lblSiguiente.setBounds(0, 0, 122, 35);
 		lblSiguiente.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSiguiente.setForeground(Color.WHITE);
 		lblSiguiente.setFont(new Font("Roboto", Font.PLAIN, 18));
-		lblSiguiente.setBounds(0, 0, 122, 35);
+		
 		
 		
 		//Campos que guardaremos en la base de datos
@@ -293,6 +294,7 @@ public class ReservasView extends JFrame {
 		panel.add(txtFormaPago);
 
 		JPanel btnsiguiente = new JPanel();
+		btnsiguiente.add(lblSiguiente);
 		btnsiguiente.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
