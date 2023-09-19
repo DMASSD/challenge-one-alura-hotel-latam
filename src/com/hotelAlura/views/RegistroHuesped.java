@@ -48,7 +48,6 @@ public class RegistroHuesped extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {	
-					System.out.println("Que CSM el constructor, yo voy primero");
 					RegistroHuesped frame = new RegistroHuesped(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
