@@ -261,79 +261,87 @@ public class RegistroHuesped extends JFrame {
 		btnguardar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
-				Huespedes huesped = new Huespedes(
-						txtNombre.getText(),
-						txtApellido.getText(),
-						txtFechaN.getDate(),
-						(String)txtNacionalidad.getSelectedItem(),
-						txtTelefono.getText()
-						);
-				
-				try(Connection con = new ConnectionFactory().recuperaConexion()) {
 					
-					final PreparedStatement statement = con.prepareStatement(
-							"INSERT INTO huespedes(nombre,apellido,fecha_de_nacimiento,nacionalidad,telefono) "
-							+ "VALUES(?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
+				if (txtNombre.getText()!=null &&
+					txtApellido.getText()!=null &&
+					txtFechaN.getDate()!=null) {
 					
-					try(statement) {
+					Huespedes huesped = new Huespedes(
+							txtNombre.getText(),
+							txtApellido.getText(),
+							txtFechaN.getDate(),
+							(String)txtNacionalidad.getSelectedItem(),
+							txtTelefono.getText()
+							);
+					
+					try(Connection con = new ConnectionFactory().recuperaConexion()) {
 						
-						statement.setString(1, huesped.getNombre());
-						statement.setString(2, huesped.getApellido());
-						statement.setDate(3,huesped.getFecha_de_nacimientoSQL());
-						statement.setString(4, huesped.getNacionalidad());
-						statement.setString(5, huesped.getTelefono());						
+						final PreparedStatement statement = con.prepareStatement(
+								"INSERT INTO huespedes(nombre,apellido,fecha_de_nacimiento,nacionalidad,telefono) "
+								+ "VALUES(?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
 						
-						statement.execute();
-						
-						try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-					        if (generatedKeys.next()) {
-					        	huesped.setId(generatedKeys.getInt(1));
-					        } else {
-					        	JOptionPane.showMessageDialog(null, "Error al obtener ID del usuario");
-					        }
-					    }
-						
-			            JOptionPane.showMessageDialog(null, "Usuario creado, ID = "+ huesped.getId());
+						try(statement) {
+							
+							statement.setString(1, huesped.getNombre());
+							statement.setString(2, huesped.getApellido());
+							statement.setDate(3,huesped.getFecha_de_nacimientoSQL());
+							statement.setString(4, huesped.getNacionalidad());
+							statement.setString(5, huesped.getTelefono());						
+							
+							statement.execute();
+							
+							try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+						        if (generatedKeys.next()) {
+						        	huesped.setId(generatedKeys.getInt(1));
+						        } else {
+						        	JOptionPane.showMessageDialog(null, "Error al obtener ID del usuario", "Advertencia", JOptionPane.WARNING_MESSAGE);
+						        }
+						    }
+							
+				            JOptionPane.showMessageDialog(null, "Usuario creado, ID = "+ huesped.getId());
 
+						}
+						
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(null, "Error al crear usuario", "Advertencia", JOptionPane.WARNING_MESSAGE);
 					}
 					
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Error al crear usuario");
-				}
-				
-				try(Connection con = new ConnectionFactory().recuperaConexion()) {
-					
-					final PreparedStatement statement = con.prepareStatement(
-							"INSERT INTO reservas (fecha_entrada, fecha_salida, valor, formato_de_pago,id_huesped) "
-							+ "VALUES(?,?,?,?,?)",PreparedStatement.RETURN_GENERATED_KEYS); 
-					
-					try(statement) {
+					try(Connection con = new ConnectionFactory().recuperaConexion()) {
 						
-						statement.setDate(1, reserva.getFecha_entradaSQL());
-						statement.setDate(2, reserva.getFecha_salidaSQL());
-						statement.setDouble(3,reserva.getValor());
-						statement.setString(4, reserva.getFormato_de_pago());	
-						statement.setInt(5, huesped.getId());	
+						final PreparedStatement statement = con.prepareStatement(
+								"INSERT INTO reservas (fecha_entrada, fecha_salida, valor, formato_de_pago,id_huesped) "
+								+ "VALUES(?,?,?,?,?)",PreparedStatement.RETURN_GENERATED_KEYS); 
 						
-						statement.execute();
-						
-						try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-					        if (generatedKeys.next()) {
-					        	reserva.setId(generatedKeys.getInt(1));
-					        } else {
-					        	JOptionPane.showMessageDialog(null, "Error al obtener ID de la reserva");
-					        }
-					    }
-						
-			            JOptionPane.showMessageDialog(null, "Reservacion creada, ID de reserva = " + reserva.getId());
+						try(statement) {
+							
+							statement.setDate(1, reserva.getFecha_entradaSQL());
+							statement.setDate(2, reserva.getFecha_salidaSQL());
+							statement.setDouble(3,reserva.getValor());
+							statement.setString(4, reserva.getFormato_de_pago());	
+							statement.setInt(5, huesped.getId());	
+							
+							statement.execute();
+							
+							try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+						        if (generatedKeys.next()) {
+						        	reserva.setId(generatedKeys.getInt(1));
+						        } else {
+						        	JOptionPane.showMessageDialog(null, "Error al obtener ID de la reserva", "Advertencia", JOptionPane.WARNING_MESSAGE);
+						        }
+						    }
+							
+				            JOptionPane.showMessageDialog(null, "Reservacion creada, ID de reserva = " + reserva.getId());
 
+						}
+						
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(null, "Error al asignar reservacion", "Advertencia", JOptionPane.WARNING_MESSAGE);
 					}
 					
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Error al asignar reservacion");
-				}
-				
+				} else {
+					JOptionPane.showMessageDialog(null, "Es necesario llenar todos los campos para continuar", "Advertencia", JOptionPane.WARNING_MESSAGE);
+
+				}				
 			}
 		});
 		btnguardar.setLayout(null);
@@ -353,9 +361,20 @@ public class RegistroHuesped extends JFrame {
 		btnmenu.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				
+				int opcion = JOptionPane.showConfirmDialog(
+			            null,
+			            "¿Desea volver al menu?",
+			            "Confirmar regreso al menu",
+			            JOptionPane.YES_NO_OPTION
+			        );
+
+			    if (opcion == JOptionPane.YES_OPTION) {
+				
 				MenuUsuario menu = new MenuUsuario();
 	            menu.setVisible(true);
 	            dispose();
+			    }
 	            
 			}});
 		btnmenu.setLayout(null);
