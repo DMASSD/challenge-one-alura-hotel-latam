@@ -13,6 +13,8 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.SystemColor;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -80,7 +82,7 @@ public class Busqueda extends JFrame {
 		JLabel lblNewLabel_4 = new JLabel("SISTEMA DE BÚSQUEDA");
 		lblNewLabel_4.setForeground(new Color(12, 138, 199));
 		lblNewLabel_4.setFont(new Font("Roboto Black", Font.BOLD, 24));
-		lblNewLabel_4.setBounds(331, 62, 280, 42);
+		lblNewLabel_4.setBounds(331, 62, 300, 42);
 		contentPane.add(lblNewLabel_4);
 		
 		JTabbedPane panel = new JTabbedPane(JTabbedPane.TOP);
@@ -179,9 +181,15 @@ public class Busqueda extends JFrame {
 		btnexit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				MenuUsuario usuario = new MenuUsuario();
-				usuario.setVisible(true);
-				dispose();
+				int opcion = JOptionPane.showConfirmDialog(
+			            null,
+			            "¿Desea cerrar el programa?",
+			            "Confirmar Cierre",
+			            JOptionPane.YES_NO_OPTION
+			        );
+
+			    if (opcion == JOptionPane.YES_OPTION) {System.exit(0);}
+				
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) { //Al usuario pasar el mouse por el botón este cambiará de color

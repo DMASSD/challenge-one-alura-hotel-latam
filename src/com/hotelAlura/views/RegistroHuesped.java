@@ -7,6 +7,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import java.awt.Color;
 
+import com.hotelAlura.controller.HuespedesController;
+import com.hotelAlura.controller.ReservasController;
 import com.hotelAlura.factory.ConnectionFactory;
 import com.hotelAlura.modelo.Huespedes;
 import com.hotelAlura.modelo.Reservas;
@@ -274,69 +276,15 @@ public class RegistroHuesped extends JFrame {
 							txtTelefono.getText()
 							);
 					
-					try(Connection con = new ConnectionFactory().recuperaConexion()) {
-						
-						final PreparedStatement statement = con.prepareStatement(
-								"INSERT INTO huespedes(nombre,apellido,fecha_de_nacimiento,nacionalidad,telefono) "
-								+ "VALUES(?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
-						
-						try(statement) {
-							
-							statement.setString(1, huesped.getNombre());
-							statement.setString(2, huesped.getApellido());
-							statement.setDate(3,huesped.getFecha_de_nacimientoSQL());
-							statement.setString(4, huesped.getNacionalidad());
-							statement.setString(5, huesped.getTelefono());						
-							
-							statement.execute();
-							
-							try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-						        if (generatedKeys.next()) {
-						        	huesped.setId(generatedKeys.getInt(1));
-						        } else {
-						        	JOptionPane.showMessageDialog(null, "Error al obtener ID del usuario", "Advertencia", JOptionPane.WARNING_MESSAGE);
-						        }
-						    }
-							
-				            JOptionPane.showMessageDialog(null, "Usuario creado, ID = "+ huesped.getId());
-
-						}
-						
-					} catch (Exception e2) {
-						JOptionPane.showMessageDialog(null, "Error al crear usuario", "Advertencia", JOptionPane.WARNING_MESSAGE);
-					}
+					HuespedesController huespedesController = new HuespedesController();
+					huesped.setId(huespedesController.guardar(huesped));
 					
-					try(Connection con = new ConnectionFactory().recuperaConexion()) {
-						
-						final PreparedStatement statement = con.prepareStatement(
-								"INSERT INTO reservas (fecha_entrada, fecha_salida, valor, formato_de_pago,id_huesped) "
-								+ "VALUES(?,?,?,?,?)",PreparedStatement.RETURN_GENERATED_KEYS); 
-						
-						try(statement) {
-							
-							statement.setDate(1, reserva.getFecha_entradaSQL());
-							statement.setDate(2, reserva.getFecha_salidaSQL());
-							statement.setDouble(3,reserva.getValor());
-							statement.setString(4, reserva.getFormato_de_pago());	
-							statement.setInt(5, huesped.getId());	
-							
-							statement.execute();
-							
-							try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-						        if (generatedKeys.next()) {
-						        	reserva.setId(generatedKeys.getInt(1));
-						        } else {
-						        	JOptionPane.showMessageDialog(null, "Error al obtener ID de la reserva", "Advertencia", JOptionPane.WARNING_MESSAGE);
-						        }
-						    }
-							
-				            JOptionPane.showMessageDialog(null, "Reservacion creada, ID de reserva = " + reserva.getId());
+		            JOptionPane.showMessageDialog(null, "Usuario creado, ID = "+ huesped.getId());
 
-						}
-						
-					} catch (Exception e2) {
-						JOptionPane.showMessageDialog(null, "Error al asignar reservacion", "Advertencia", JOptionPane.WARNING_MESSAGE);
-					}
+					ReservasController reservasController = new ReservasController();
+					reserva.setId(reservasController.guardar(reserva, huesped));
+					
+		            JOptionPane.showMessageDialog(null, "Reservacion creada, ID de reserva = " + reserva.getId());
 					
 				} else {
 					JOptionPane.showMessageDialog(null, "Es necesario llenar todos los campos para continuar", "Advertencia", JOptionPane.WARNING_MESSAGE);

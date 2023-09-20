@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JTextField;
 
+import com.hotelAlura.controller.PreciosReservasController;
 import com.hotelAlura.factory.ConnectionFactory;
 import com.hotelAlura.modelo.Reservas;
 import com.toedter.calendar.JDateChooser;
@@ -294,58 +295,31 @@ public class ReservasView extends JFrame {
 			public void propertyChange(PropertyChangeEvent evt) {
 				
 				if ("date".equals(evt.getPropertyName())) {
+					
 		            Date fechaEntrada = txtFechaEntrada.getDate();
 		            Date fechaSalida = txtFechaSalida.getDate();
-		            double precioGeneral;
 		            double precioAjustado;
 		            long diasHospedados;
 		            
 		            if (fechaEntrada != null && fechaSalida != null) {
+		            	
 		                if(fechaSalida.after(fechaEntrada)) {
 
         			        diasHospedados = (fechaSalida.getTime() - fechaEntrada.getTime())/(24 * 60 * 60 * 1000) + 1;
-		                	
-		                	try(Connection con = new ConnectionFactory().recuperaConexion();) {
-		                		
-		                		final PreparedStatement statement = con.prepareStatement(
-		                				"SELECT precio FROM precios_reservas WHERE id = 1");
-		                		
-		                		try(statement) {
-		                			
-		                			boolean result = statement.execute();
-			                		
-			                		if (result) {
-			                			
-			                			final ResultSet resulset = statement.getResultSet();
-			                			
-			                			try(resulset) {
-			                				
-			                				if (resulset.next()) {
-			                					
-			                					precioGeneral = Double.parseDouble(resulset.getString("precio"));
-			                					
-			                					if (diasHospedados < 3) {precioAjustado = precioGeneral * 1.1;} 
-				    		                	else if (diasHospedados >= 3 && diasHospedados <= 6) {precioAjustado = precioGeneral;} 
-				    		                	else {precioAjustado = precioGeneral * .85;}  
-			                					
-			                					totalAPagar = (diasHospedados * precioAjustado);
-			                					
-			                					DecimalFormat formatoDinero = new DecimalFormat("#,###.##");
-			                			        String numeroFormateado = formatoDinero.format(totalAPagar);
-			                					txtValor.setText("$ " + numeroFormateado);
-			                					
-											}
-											
-										}
-											
-									}else {
-										JOptionPane.showMessageDialog(null, "Error en la consulta con la base de datos,"
-												+ " contactar con soporte");
-									}
-									
-								}
-								
-							} catch (Exception e) {	}
+        			        
+        			        PreciosReservasController preciosReservasController = new PreciosReservasController();    
+        			        
+        			        double precioGeneral = preciosReservasController.consultaPrecio();
+        					
+        					if (diasHospedados < 3) {precioAjustado = precioGeneral * 1.1;} 
+		                	else if (diasHospedados >= 3 && diasHospedados <= 6) {precioAjustado = precioGeneral;} 
+		                	else {precioAjustado = precioGeneral * .85;}  
+        					
+        					totalAPagar = (diasHospedados * precioAjustado);
+        					
+        					DecimalFormat formatoDinero = new DecimalFormat("#,###.##");
+        			        String numeroFormateado = formatoDinero.format(totalAPagar);
+        					txtValor.setText("$ " + numeroFormateado);
 			                
 		                }else {
 		                	String mensaje = "La fecha de entrada no puede ser mayor a la fecha de salida";
@@ -380,7 +354,9 @@ public class ReservasView extends JFrame {
 		btnsiguiente.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {	
+				if (ReservasView.txtFechaEntrada.getDate() != null &&
+					ReservasView.txtFechaSalida.getDate() != null &&
+					!txtValor.getText().isBlank()) {	
 					
 					Reservas reserva = new Reservas(
 							ReservasView.txtFechaEntrada.getDate(),
@@ -390,6 +366,7 @@ public class ReservasView extends JFrame {
 					
 					RegistroHuesped registro = new RegistroHuesped(reserva);
 					registro.setVisible(true);
+					dispose();	
 				} else {
 					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
 				}
