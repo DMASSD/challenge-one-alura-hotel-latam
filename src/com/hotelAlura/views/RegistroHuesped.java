@@ -260,7 +260,7 @@ public class RegistroHuesped extends JFrame {
 		btnguardar.setBounds(723, 560, 122, 35);
 		btnguardar.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {//TODO
+			public void mouseClicked(MouseEvent e) {
 				
 				Huespedes huesped = new Huespedes(
 						txtNombre.getText(),
@@ -347,6 +347,28 @@ public class RegistroHuesped extends JFrame {
 		labelGuardar.setFont(new Font("Roboto", Font.PLAIN, 18));
 		labelGuardar.setBounds(0, 0, 122, 35);
 		btnguardar.add(labelGuardar);
+		
+		JPanel btnmenu = new JPanel();
+		btnmenu.setBounds(573, 560, 122, 35);
+		btnmenu.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				MenuUsuario menu = new MenuUsuario();
+	            menu.setVisible(true);
+	            dispose();
+	            
+			}});
+		btnmenu.setLayout(null);
+		btnmenu.setBackground(new Color(12, 138, 199));
+		contentPane.add(btnmenu);
+		btnmenu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+		
+		JLabel labelMenu = new JLabel("MENU");
+		labelMenu.setHorizontalAlignment(SwingConstants.CENTER);
+		labelMenu.setForeground(Color.WHITE);
+		labelMenu.setFont(new Font("Roboto", Font.PLAIN, 18));
+		labelMenu.setBounds(0, 0, 122, 35);
+		btnmenu.add(labelMenu);
 		
 		JPanel panel = new JPanel();
 		panel.setBounds(0, 0, 489, 634);
