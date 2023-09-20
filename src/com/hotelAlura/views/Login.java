@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.hotelAlura.controller.AccesoEmpleadosController;
 import com.hotelAlura.factory.ConnectionFactory;
 
 import java.awt.Color;
@@ -252,38 +253,20 @@ public class Login extends JFrame {
 
 		String usuario = txtUsuario.getText();
 		String contrase = new String (txtContrasena.getPassword());
-				
-		try(Connection con = new ConnectionFactory().recuperaConexion();) {
-			final PreparedStatement statement = con.prepareStatement(
-					"SELECT contrasena FROM acceso_empleados WHERE "
-					+ "nombre_de_usuario = ?");
-			
-			try(statement){
-				statement.setString(1, usuario);
-				
-				boolean result = statement.execute();
-				
-				if (result) {
-					ResultSet resultSet = statement.getResultSet();
-					
-					if (resultSet.next() && contrase.equals(resultSet.getString("contrasena"))) {
-						resultSet.close();
-						MenuUsuario menu = new MenuUsuario();
-			            menu.setVisible(true);
-			            dispose();
-			            
-					}else {
-			            JOptionPane.showMessageDialog(this, "Usuario o Contraseña no válidos");
-					}
-					resultSet.close();
-					
-				}else {
-		            JOptionPane.showMessageDialog(this, "Error en la base de datos, intentar mas tarde.");
-				}
-				
-			}
-			
-		} catch (Exception e) {	}
+		boolean acceso;
+		
+		AccesoEmpleadosController accesoEmpleadosController = new AccesoEmpleadosController();
+		
+		acceso = accesoEmpleadosController.login(usuario, contrase);
+		
+		if (acceso) {
+			MenuUsuario menu = new MenuUsuario();
+            menu.setVisible(true);
+            dispose();
+            
+		}else {
+            JOptionPane.showMessageDialog(this, "Usuario o Contraseña no válidos");
+		}
 	        
 	} 
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
