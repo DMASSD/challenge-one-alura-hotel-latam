@@ -112,21 +112,7 @@ public class Busqueda extends JFrame {
 		panel.addTab("Reservas", new ImageIcon(Busqueda.class.getResource("/com/hotelAlura/imagenes/reservado.png")), scroll_table, null);
 		scroll_table.setVisible(true);
 
-		ReservasController reservasController = new ReservasController();
-		List<Reservas> allReservas = reservasController.listarTodo();
-		
-		for (int i = 0; i < allReservas.size(); i++) {
-			Object[] nuevaFila = {
-					allReservas.get(i).getId(),
-					allReservas.get(i).getFecha_entradaSQL(),
-					allReservas.get(i).getFecha_salidaSQL(),
-					("$ " + new DecimalFormat("#,###.##").format(allReservas.get(i).getValor())),
-					allReservas.get(i).getFormato_de_pago(),
-					allReservas.get(i).getId_huesped()
-			};
-			
-			modelo.addRow(nuevaFila);
-		}
+		cargarTablaReservasCompleta(modelo);
 		
 		tbHuespedes = new JTable();
 		tbHuespedes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -143,21 +129,7 @@ public class Busqueda extends JFrame {
 		panel.addTab("Huéspedes", new ImageIcon(Busqueda.class.getResource("/com/hotelAlura/imagenes/pessoas.png")), scroll_tableHuespedes, null);
 		scroll_tableHuespedes.setVisible(true);
 		
-		HuespedesController huespedesController = new HuespedesController();
-		List<Huespedes> allHuespedes = huespedesController.listarTodo();
-		
-		for (int i = 0; i < allHuespedes.size(); i++) {
-			Object[] nuevaFila = {
-					allHuespedes.get(i).getId(),
-					allHuespedes.get(i).getNombre(),
-					allHuespedes.get(i).getApellido(),
-					allHuespedes.get(i).getFecha_de_nacimientoSQL(),
-					allHuespedes.get(i).getNacionalidad(),
-					allHuespedes.get(i).getTelefono(),
-					allHuespedes.get(i).getReservacion_actual()};
-			
-			modeloHuesped.addRow(nuevaFila);
-		}
+		cargarTablaHuespedesCompleta(modeloHuesped);
 		
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(Busqueda.class.getResource("/com/hotelAlura/imagenes/Ha-100px.png")));
@@ -304,6 +276,42 @@ public class Busqueda extends JFrame {
 		lblEliminar.setBounds(0, 0, 122, 35);
 		btnEliminar.add(lblEliminar);
 		setResizable(false);
+	}
+
+	private void cargarTablaHuespedesCompleta(DefaultTableModel modelo) {
+		HuespedesController huespedesController = new HuespedesController();
+		List<Huespedes> allHuespedes = huespedesController.listarTodo();
+		
+		for (int i = 0; i < allHuespedes.size(); i++) {
+			Object[] nuevaFila = {
+					allHuespedes.get(i).getId(),
+					allHuespedes.get(i).getNombre(),
+					allHuespedes.get(i).getApellido(),
+					allHuespedes.get(i).getFecha_de_nacimientoSQL(),
+					allHuespedes.get(i).getNacionalidad(),
+					allHuespedes.get(i).getTelefono(),
+					allHuespedes.get(i).getReservacion_actual()};
+			
+			modeloHuesped.addRow(nuevaFila);
+		}
+	}
+
+	private void cargarTablaReservasCompleta(DefaultTableModel modelo) {
+		ReservasController reservasController = new ReservasController();
+		List<Reservas> allReservas = reservasController.listarTodo();
+		
+		for (int i = 0; i < allReservas.size(); i++) {
+			Object[] nuevaFila = {
+					allReservas.get(i).getId(),
+					allReservas.get(i).getFecha_entradaSQL(),
+					allReservas.get(i).getFecha_salidaSQL(),
+					("$ " + new DecimalFormat("#,###.##").format(allReservas.get(i).getValor())),
+					allReservas.get(i).getFormato_de_pago(),
+					allReservas.get(i).getId_huesped()
+			};
+			
+			modelo.addRow(nuevaFila);
+		}
 	}
 	
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
