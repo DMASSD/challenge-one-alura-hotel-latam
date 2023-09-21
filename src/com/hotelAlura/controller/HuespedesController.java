@@ -16,5 +16,9 @@ public class HuespedesController {
 	public Integer guardar(Huespedes huesped){
 		return this.huespedesDAO.guardar(huesped);
 	}
+	
+	public void setReservacionActual(Huespedes huesped) {
+		this.huespedesDAO.setReservacionActual(huesped);
+	}
 
 }

@@ -10,6 +10,7 @@ public class Huespedes {
 	private Date fecha_de_nacimiento; 
 	private String nacionalidad; 
 	private String telefono;
+	private Integer reservacion_actual;
 	
 	
 	public Huespedes(String nombre, String apellido, Date fecha_de_nacimiento, String nacionalidad, String telefono) {
@@ -82,6 +83,18 @@ public class Huespedes {
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
+
+
+	public Integer getReservacion_actual() {
+		return reservacion_actual;
+	}
+
+
+	public void setReservacion_actual(Integer reservacion_actual) {
+		this.reservacion_actual = reservacion_actual;
+	}
+	
+	
 	
 	
 	

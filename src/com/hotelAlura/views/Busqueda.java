@@ -6,6 +6,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import com.hotelAlura.controller.ReservasController;
+import com.hotelAlura.modelo.Reservas;
+
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -27,6 +31,7 @@ import javax.swing.ListSelectionModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.text.DecimalFormat;
 
 @SuppressWarnings("serial")
 public class Busqueda extends JFrame {
@@ -90,9 +95,6 @@ public class Busqueda extends JFrame {
 		panel.setFont(new Font("Roboto", Font.PLAIN, 16));
 		panel.setBounds(20, 169, 865, 328);
 		contentPane.add(panel);
-
-		
-		
 		
 		tbReservas = new JTable();
 		tbReservas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -103,10 +105,28 @@ public class Busqueda extends JFrame {
 		modelo.addColumn("Fecha Check Out");
 		modelo.addColumn("Valor");
 		modelo.addColumn("Forma de Pago");
+		modelo.addColumn("ID Huesped");
 		JScrollPane scroll_table = new JScrollPane(tbReservas);
 		panel.addTab("Reservas", new ImageIcon(Busqueda.class.getResource("/com/hotelAlura/imagenes/reservado.png")), scroll_table, null);
 		scroll_table.setVisible(true);
+
+		ReservasController reservasController = new ReservasController();
+		List<Reservas> allReservas = reservasController.listarTodo();
 		
+		DefaultTableModel modeloTabla = (DefaultTableModel) tbReservas.getModel();
+
+		for (int i = 0; i < allReservas.size(); i++) {
+			Object[] nuevaFila = {
+					allReservas.get(i).getId(),
+					allReservas.get(i).getFecha_entradaSQL(),
+					allReservas.get(i).getFecha_salidaSQL(),
+					("$ " + new DecimalFormat("#,###.##").format(allReservas.get(i).getValor())),
+					allReservas.get(i).getFormato_de_pago(),
+					allReservas.get(i).getId_huesped()
+			};
+			
+			modeloTabla.addRow(nuevaFila);
+		}
 		
 		tbHuespedes = new JTable();
 		tbHuespedes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -122,6 +142,8 @@ public class Busqueda extends JFrame {
 		JScrollPane scroll_tableHuespedes = new JScrollPane(tbHuespedes);
 		panel.addTab("Huéspedes", new ImageIcon(Busqueda.class.getResource("/com/hotelAlura/imagenes/pessoas.png")), scroll_tableHuespedes, null);
 		scroll_tableHuespedes.setVisible(true);
+		
+		//TODO añadir la impresion de la tabla huespedes
 		
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(Busqueda.class.getResource("/com/hotelAlura/imagenes/Ha-100px.png")));
@@ -274,11 +296,11 @@ public class Busqueda extends JFrame {
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
 	        xMouse = evt.getX();
 	        yMouse = evt.getY();
-	    }
+	 }
 
-	    private void headerMouseDragged(java.awt.event.MouseEvent evt) {
+	 private void headerMouseDragged(java.awt.event.MouseEvent evt) {
 	        int x = evt.getXOnScreen();
 	        int y = evt.getYOnScreen();
 	        this.setLocation(x - xMouse, y - yMouse);
-}
+	 }
 }

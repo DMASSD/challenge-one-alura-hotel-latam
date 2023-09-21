@@ -18,8 +18,17 @@ public class Reservas {
 		this.valor = valor;
 		this.formato_de_pago = formato_de_pago;
 	}
-	
-	
+		
+	public Reservas(Integer id, Date fecha_entrada, Date fecha_salida, Double valor, String formato_de_pago,
+			Integer id_huesped) {
+		this.id = id;
+		this.fecha_entrada = fecha_entrada;
+		this.fecha_salida = fecha_salida;
+		this.valor = valor;
+		this.formato_de_pago = formato_de_pago;
+		this.id_huesped = id_huesped;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -79,8 +88,10 @@ public class Reservas {
 	@Override
 	public String toString() {
 		return "Reservas [id=" + id + ", fecha_entrada=" + fecha_entrada + ", fecha_salida=" + fecha_salida + ", valor="
-				+ valor + ", formato_de_pago=" + formato_de_pago + "]";
+				+ valor + ", formato_de_pago=" + formato_de_pago + ", id_huesped=" + id_huesped + "]";
 	}
+
+	
 	
 	
 	

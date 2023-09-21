@@ -284,6 +284,11 @@ public class RegistroHuesped extends JFrame {
 					ReservasController reservasController = new ReservasController();
 					reserva.setId(reservasController.guardar(reserva, huesped));
 					
+					huesped.setReservacion_actual(reserva.getId());
+					
+					huespedesController = new HuespedesController();
+					huespedesController.setReservacionActual(huesped);
+					
 		            JOptionPane.showMessageDialog(null, "Reservacion creada, ID de reserva = " + reserva.getId());
 					
 				} else {

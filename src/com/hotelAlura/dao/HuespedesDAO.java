@@ -52,5 +52,34 @@ public class HuespedesDAO {
 		}
 		
 	}
+	
+	public void setReservacionActual(Huespedes huesped) {
+		
+		try(this.con) {
+			
+			final PreparedStatement statement = con.prepareStatement(
+					"UPDATE huespedes"
+					+ " SET reserva_actual = ?"
+					+ " WHERE id = ?");
+			
+			try(statement) {
+				
+				statement.setInt(1, huesped.getReservacion_actual());					
+				statement.setInt(2, huesped.getId());
+				
+				statement.execute();
+								
+			}
+			
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(
+            		null,
+            		"Error al asignar la reserva al huesped en la base de datos, contactar con soporte",
+            		"Advertencia",
+            		JOptionPane.WARNING_MESSAGE);
+			throw new RuntimeException(e);
+		}
+		
+	}
 
 }
