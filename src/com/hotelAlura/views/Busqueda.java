@@ -276,6 +276,32 @@ public class Busqueda extends JFrame {
 		lblEliminar.setBounds(0, 0, 122, 35);
 		btnEliminar.add(lblEliminar);
 		setResizable(false);
+		
+		JPanel btnRecargar = new JPanel();
+		btnRecargar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				modelo.setRowCount(0);
+				modeloHuesped.setRowCount(0);
+	
+				cargarTablaReservasCompleta(modelo);
+				cargarTablaHuespedesCompleta(modeloHuesped);
+			}
+		});
+		btnRecargar.setLayout(null);
+		btnRecargar.setBackground(new Color(12, 138, 199));
+		btnRecargar.setBounds(100, 508, 122, 35);
+		btnRecargar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+		contentPane.add(btnRecargar);
+		
+		JLabel lblRecargar = new JLabel("RECARGAR");
+		lblRecargar.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRecargar.setForeground(Color.WHITE);
+		lblRecargar.setFont(new Font("Roboto", Font.PLAIN, 18));
+		lblRecargar.setBounds(0, 0, 122, 35);
+		btnRecargar.add(lblRecargar);
+		setResizable(false);
 	}
 
 	private void cargarTablaHuespedesCompleta(DefaultTableModel modelo) {
