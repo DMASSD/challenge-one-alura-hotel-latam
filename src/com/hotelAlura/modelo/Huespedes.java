@@ -20,7 +20,18 @@ public class Huespedes {
 		this.nacionalidad = nacionalidad;
 		this.telefono = telefono;
 	}
+	
 
+	public Huespedes(int id, String nombre, String apellido, Date fecha_de_nacimiento, String nacionalidad,
+			String telefono, Integer reservacion_actual) {
+		this.id = id;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.fecha_de_nacimiento = fecha_de_nacimiento;
+		this.nacionalidad = nacionalidad;
+		this.telefono = telefono;
+		this.reservacion_actual = reservacion_actual;
+	}
 
 	public int getId() {
 		return id;
@@ -92,6 +103,14 @@ public class Huespedes {
 
 	public void setReservacion_actual(Integer reservacion_actual) {
 		this.reservacion_actual = reservacion_actual;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Huespedes [id=" + id + ", nombre=" + nombre + ", apellido=" + apellido + ", fecha_de_nacimiento="
+				+ fecha_de_nacimiento + ", nacionalidad=" + nacionalidad + ", telefono=" + telefono
+				+ ", reservacion_actual=" + reservacion_actual + "]";
 	}
 	
 	

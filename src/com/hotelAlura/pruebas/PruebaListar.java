@@ -3,12 +3,14 @@ package com.hotelAlura.pruebas;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import com.hotelAlura.factory.ConnectionFactory;
+import com.hotelAlura.modelo.Huespedes;
 import com.hotelAlura.modelo.Reservas;
 
 public class PruebaListar {
@@ -17,12 +19,12 @@ public class PruebaListar {
 		
 		final Connection con = new ConnectionFactory().recuperaConexion();
 		
-		List<Reservas> resultado = new ArrayList<>();
+		List<Huespedes> resultado = new ArrayList<>();
 		
 		try(con) {
 			
 			final PreparedStatement statement = con.prepareStatement(
-					"SELECT * FROM reservas"
+					"SELECT * FROM huespedes"
 					);
 			
 			try(statement) {
@@ -35,16 +37,17 @@ public class PruebaListar {
 										
 					while (resultset.next()) {
 						
-						Reservas reserva = new Reservas(
+						Huespedes huesped = new Huespedes(
 								resultset.getInt("id"),
-								resultset.getDate("fecha_entrada"),
-								resultset.getDate("fecha_salida"),
-								resultset.getDouble("valor"),
-								resultset.getString("formato_de_pago"),
-								resultset.getInt("id_huesped")
+								resultset.getString("nombre"),
+								resultset.getString("apellido"),
+								resultset.getDate("fecha_de_nacimiento"),
+								resultset.getString("nacionalidad"),
+								resultset.getString("telefono"),
+								resultset.getInt("reserva_actual")
 								);						
 						
-						resultado.add(reserva);
+						resultado.add(huesped);
 					}
 				}
 				
@@ -61,8 +64,6 @@ public class PruebaListar {
 		}
 		
 		resultado.forEach(elemento -> System.out.println(elemento.toString()));
-
-
 	}
 
 }

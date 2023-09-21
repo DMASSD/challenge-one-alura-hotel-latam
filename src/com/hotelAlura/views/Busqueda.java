@@ -7,7 +7,9 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.hotelAlura.controller.HuespedesController;
 import com.hotelAlura.controller.ReservasController;
+import com.hotelAlura.modelo.Huespedes;
 import com.hotelAlura.modelo.Reservas;
 
 import javax.swing.JTable;
@@ -113,8 +115,6 @@ public class Busqueda extends JFrame {
 		ReservasController reservasController = new ReservasController();
 		List<Reservas> allReservas = reservasController.listarTodo();
 		
-		DefaultTableModel modeloTabla = (DefaultTableModel) tbReservas.getModel();
-
 		for (int i = 0; i < allReservas.size(); i++) {
 			Object[] nuevaFila = {
 					allReservas.get(i).getId(),
@@ -125,7 +125,7 @@ public class Busqueda extends JFrame {
 					allReservas.get(i).getId_huesped()
 			};
 			
-			modeloTabla.addRow(nuevaFila);
+			modelo.addRow(nuevaFila);
 		}
 		
 		tbHuespedes = new JTable();
@@ -143,7 +143,21 @@ public class Busqueda extends JFrame {
 		panel.addTab("Huéspedes", new ImageIcon(Busqueda.class.getResource("/com/hotelAlura/imagenes/pessoas.png")), scroll_tableHuespedes, null);
 		scroll_tableHuespedes.setVisible(true);
 		
-		//TODO añadir la impresion de la tabla huespedes
+		HuespedesController huespedesController = new HuespedesController();
+		List<Huespedes> allHuespedes = huespedesController.listarTodo();
+		
+		for (int i = 0; i < allHuespedes.size(); i++) {
+			Object[] nuevaFila = {
+					allHuespedes.get(i).getId(),
+					allHuespedes.get(i).getNombre(),
+					allHuespedes.get(i).getApellido(),
+					allHuespedes.get(i).getFecha_de_nacimientoSQL(),
+					allHuespedes.get(i).getNacionalidad(),
+					allHuespedes.get(i).getTelefono(),
+					allHuespedes.get(i).getReservacion_actual()};
+			
+			modeloHuesped.addRow(nuevaFila);
+		}
 		
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(Busqueda.class.getResource("/com/hotelAlura/imagenes/Ha-100px.png")));
