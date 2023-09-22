@@ -132,5 +132,58 @@ public class HuespedesDAO {
 		
 		return resultado;
 	}
+	
+	public List<Huespedes> busqueda(String nombre) {
+		List<Huespedes> resultado = new ArrayList<>();
+		
+		try(con) {
+			
+			final PreparedStatement statement = con.prepareStatement(
+					"SELECT * FROM huespedes WHERE "
+					+ "nombre LIKE CONCAT('%', ?, '%') || "
+					+ "apellido LIKE CONCAT('%', ?, '%')"
+					);
+			
+			try(statement) {
+				
+				statement.setString(1, nombre);
+				statement.setString(2, nombre);
+				
+				statement.execute();
+				
+				ResultSet resultset = statement.getResultSet();
+				
+				try(resultset) {
+										
+					while (resultset.next()) {
+						
+						Huespedes huesped = new Huespedes(
+								resultset.getInt("id"),
+								resultset.getString("nombre"),
+								resultset.getString("apellido"),
+								resultset.getDate("fecha_de_nacimiento"),
+								resultset.getString("nacionalidad"),
+								resultset.getString("telefono"),
+								resultset.getInt("reserva_actual")
+								);						
+						
+						resultado.add(huesped);
+					}
+				}
+				
+			} 
+			
+			
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(
+            		null,
+            		"Ninguna persona con ese nombre o apellido se ha registrado",
+            		"Advertencia",
+            		JOptionPane.WARNING_MESSAGE);			
+			throw new RuntimeException(e);
+		}
+		
+		return resultado;
+	}
 
 }

@@ -25,6 +25,9 @@ public class ReservasController {
 		return reservasDAO.listarTodo();
 	}
 	
+	public List<Reservas> busquedaPorIdHuesped(List<Huespedes> huespedes){
+		return reservasDAO.busquedaPorIdHuesped(huespedes);
+	}
 	
 	
 }

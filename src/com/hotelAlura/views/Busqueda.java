@@ -232,6 +232,47 @@ public class Busqueda extends JFrame {
 		btnbuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				
+				HuespedesController huespedesController = new HuespedesController();
+				List<Huespedes> listaHuespedes = huespedesController.busqueda(txtBuscar.getText());
+				
+				if(!listaHuespedes.isEmpty()) {
+					
+					modelo.setRowCount(0);
+					modeloHuesped.setRowCount(0);
+					
+					for (int i = 0; i < listaHuespedes.size(); i++) {
+						Object[] nuevaFila = {
+								listaHuespedes.get(i).getId(),
+								listaHuespedes.get(i).getNombre(),
+								listaHuespedes.get(i).getApellido(),
+								listaHuespedes.get(i).getFecha_de_nacimientoSQL(),
+								listaHuespedes.get(i).getNacionalidad(),
+								listaHuespedes.get(i).getTelefono(),
+								listaHuespedes.get(i).getReservacion_actual()};
+						
+						modeloHuesped.addRow(nuevaFila);
+					}
+					
+					ReservasController reservasController = new ReservasController();
+					List<Reservas> allReservas = reservasController.busquedaPorIdHuesped(listaHuespedes);
+					
+					for (int i = 0; i < allReservas.size(); i++) {
+						Object[] nuevaFila = {
+								allReservas.get(i).getId(),
+								allReservas.get(i).getFecha_entradaSQL(),
+								allReservas.get(i).getFecha_salidaSQL(),
+								("$ " + new DecimalFormat("#,###.##").format(allReservas.get(i).getValor())),
+								allReservas.get(i).getFormato_de_pago(),
+								allReservas.get(i).getId_huesped()
+						};
+						
+						modelo.addRow(nuevaFila);
+					}
+				}
+				
+				
+				
 
 			}
 		});

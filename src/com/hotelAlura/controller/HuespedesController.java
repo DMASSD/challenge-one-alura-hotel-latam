@@ -26,5 +26,9 @@ public class HuespedesController {
 	public List<Huespedes> listarTodo() {
 		return this.huespedesDAO.listarTodo();
 	}
+	
+	public List<Huespedes> busqueda(String nombre){
+		return this.huespedesDAO.busqueda(nombre);
+	}
 
 }
