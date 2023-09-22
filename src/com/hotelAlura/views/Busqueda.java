@@ -102,7 +102,12 @@ public class Busqueda extends JFrame {
 		panel.setBounds(20, 169, 865, 328);
 		contentPane.add(panel);
 		
-		tbReservas = new JTable();
+		tbReservas = new JTable(new DefaultTableModel() {
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		        return column != 0 && column != 5;
+		    }
+		});
 		tbReservas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tbReservas.setFont(new Font("Roboto", Font.PLAIN, 16));
 		modelo = (DefaultTableModel) tbReservas.getModel();
@@ -118,7 +123,12 @@ public class Busqueda extends JFrame {
 
 		cargarTablaReservasCompleta(modelo);
 		
-		tbHuespedes = new JTable();
+		tbHuespedes = new JTable(new DefaultTableModel() {
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		        return column != 0;
+		    }
+		});
 		tbHuespedes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tbHuespedes.setFont(new Font("Roboto", Font.PLAIN, 16));
 		modeloHuesped = (DefaultTableModel) tbHuespedes.getModel();
@@ -300,7 +310,7 @@ public class Busqueda extends JFrame {
 		lblBuscar.setFont(new Font("Roboto", Font.PLAIN, 18));
 		
 		JPanel btnEditar = new JPanel();
-		btnEditar.addMouseListener(new MouseAdapter() { //TODO
+		btnEditar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 					
@@ -321,18 +331,26 @@ public class Busqueda extends JFrame {
 					        		getValueAt(selectedRow,3)).replaceAll("\\s", "");
 					        
 					        Number numeroDesformateado = 0;
-					        
+   
 							try {
 								numeroDesformateado = formatoDinero.parse(numeroFormateado);
 							} catch (ParseException e1) {}
-
+														
+							String obtenerFecha = "" + tbReservas.getValueAt(selectedRow, 1);
+							java.sql.Date fechaIngreso = java.sql.Date.valueOf(obtenerFecha);
+					        
+							obtenerFecha = "" + tbReservas.getValueAt(selectedRow, 2);
+							java.sql.Date fechaSalida = java.sql.Date.valueOf(obtenerFecha);
+					        
+					        Integer idUsuario = Integer.parseInt("" + tbReservas.getValueAt(selectedRow,5));
+					        
 							Reservas reserva = new Reservas(
 								(Integer)tbReservas.getValueAt(selectedRow,0),
-								(Date) tbReservas.getValueAt(selectedRow,1),
-								(Date)tbReservas.getValueAt(selectedRow,2),
+								fechaIngreso,
+								fechaSalida,
 								numeroDesformateado.doubleValue(),
 								(String)tbReservas.getValueAt(selectedRow,4),
-								(Integer)tbReservas.getValueAt(selectedRow,5)
+								idUsuario
 									);
 							
 							ReservasController reservasController = new ReservasController();
@@ -360,14 +378,19 @@ public class Busqueda extends JFrame {
 						
 						if (selectedRow != -1) {
 							
+							String obtenerFecha = "" + tbHuespedes.getValueAt(selectedRow, 3);
+							java.sql.Date fechaNacimiento = java.sql.Date.valueOf(obtenerFecha);
+							
+							Integer idReserva = Integer.parseInt("" + tbHuespedes.getValueAt(selectedRow,6));
+							
 							Huespedes huesped = new Huespedes(
 								(int)tbHuespedes.getValueAt(selectedRow,0),
 								(String) tbHuespedes.getValueAt(selectedRow,1),
 								(String) tbHuespedes.getValueAt(selectedRow,2),
-								(Date)tbHuespedes.getValueAt(selectedRow,3),
+								fechaNacimiento,
 								(String)tbHuespedes.getValueAt(selectedRow,4),
 								(String)tbHuespedes.getValueAt(selectedRow,5),
-								(Integer)tbHuespedes.getValueAt(selectedRow,6)
+								idReserva
 									);
 							
 							HuespedesController huespedesController = new HuespedesController();

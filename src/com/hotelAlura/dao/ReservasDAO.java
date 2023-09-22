@@ -161,7 +161,7 @@ public class ReservasDAO {
 	}
 
 	public void editar(Reservas reserva){
-		
+			
 		try(con) {
 			
 			final PreparedStatement statement = con.prepareStatement(
