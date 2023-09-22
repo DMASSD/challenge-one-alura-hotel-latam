@@ -9,14 +9,6 @@
 </p>
 
 ---
-##  Primeros Pasos:
-
-
-#### 🔹 Marca este proyecto con una ⭐
-#### 🔹 Sigue las orientaciones que tenemos en este repositorio. 📚
-#### 🔹 ¡Visita la página del desafío haciendo clic aquí! [Link do Challenge](https://www.aluracursos.com/challenges/oracle-one-back-end/hotelalura) 📃
-</br>
-
 ## 🖥️ Tecnologías Utilizadas:
 
 - Java
@@ -24,6 +16,7 @@
 - Biblioteca JCalendar
 - MySql
 - Plugin WindowBuilder </br>
+- JDBC
 
 ---
 ## ⚠️ Importante! ⚠️
