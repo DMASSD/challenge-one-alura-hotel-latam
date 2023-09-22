@@ -221,6 +221,32 @@ public class HuespedesDAO {
 		}
 		
 	}
+
+	public void eliminar(Integer id){
+		
+		try(con){
+						
+			final PreparedStatement statement = con.prepareStatement(
+					"DELETE FROM huespedes WHERE id = ?"
+					);
+			
+			try(statement){
+				
+				statement.setInt(1, id);
+				
+				statement.execute();
+				
+			}
+			
+		}catch (Exception e) {
+			JOptionPane.showMessageDialog(
+            		null,
+            		"Error al eliminar huesped en la base de datos, contactar con soporte",
+            		"Advertencia",
+            		JOptionPane.WARNING_MESSAGE);			
+			throw new RuntimeException(e);
+		}
+	}
 	
 	
 }

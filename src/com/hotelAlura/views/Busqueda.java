@@ -407,7 +407,7 @@ public class Busqueda extends JFrame {
 					default:
 						JOptionPane.showMessageDialog(
 			            		null,
-			            		"Seleccione una ventana y un dato para editar",
+			            		"Seleccione una casilla para editar",
 			            		"Advertencia",
 			            		JOptionPane.WARNING_MESSAGE);	
 						break;
@@ -429,6 +429,99 @@ public class Busqueda extends JFrame {
 		btnEditar.add(lblEditar);
 		
 		JPanel btnEliminar = new JPanel();
+		btnEliminar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+					
+				int selectedRow;
+				int selectedIndex = panel.getSelectedIndex();
+				List<Integer> idReservas = new ArrayList<>();
+
+				switch (selectedIndex) {
+				
+					case 0:
+												
+						selectedRow = tbReservas.getSelectedRow();
+												
+						if (selectedRow != -1) {
+							
+							idReservas.add(Integer.parseInt("" + tbReservas.getValueAt(selectedRow,0)));
+							
+							ReservasController reservasController = new ReservasController();
+							
+							reservasController.eliminar(idReservas);
+							
+							cargarTablaReservasCompleta(modelo);
+							
+				            JOptionPane.showMessageDialog(null,"Reservacion eliminada con exito");
+
+							
+						} else {
+							JOptionPane.showMessageDialog(
+				            		null,
+				            		"Seleccione una casilla para eliminar",
+				            		"Advertencia",
+				            		JOptionPane.WARNING_MESSAGE);	
+						}
+						
+						break;
+	
+					case 1:
+						
+						selectedRow = tbHuespedes.getSelectedRow();
+						
+						if (selectedRow != -1) {
+							
+							Integer idHuesped = Integer.parseInt("" + tbHuespedes.getValueAt(selectedRow,0));
+							
+							for (int fila = 0; fila < modelo.getRowCount(); fila++) {
+								
+								Integer currentHuespedId = Integer.parseInt("" + 
+										modelo.getValueAt(fila,5));
+								
+								if (currentHuespedId == idHuesped) {
+									Integer id = Integer.parseInt("" + modelo.getValueAt(
+							    		fila, 0));
+									idReservas.add(id);
+								}						
+								
+							}
+							
+							if (!idReservas.isEmpty()) {
+								ReservasController reservasController = new ReservasController();
+								
+								reservasController.eliminar(idReservas);
+							}
+														
+							HuespedesController huespedesController = new HuespedesController();
+							
+							huespedesController.eliminar(idHuesped);
+							
+				            JOptionPane.showMessageDialog(null,"Huesped y reservaciones eliminadas con exito");
+														
+						} else {
+							JOptionPane.showMessageDialog(
+				            		null,
+				            		"Seleccione una casilla para eliminar",
+				            		"Advertencia",
+				            		JOptionPane.WARNING_MESSAGE);	
+						}
+						
+						break;	
+					default:
+						JOptionPane.showMessageDialog(
+			            		null,
+			            		"Seleccione una ventana y un dato para editar",
+			            		"Advertencia",
+			            		JOptionPane.WARNING_MESSAGE);	
+						break;
+				}
+				
+				cargarTablaHuespedesCompleta(modeloHuesped);
+				cargarTablaReservasCompleta(modelo);
+
+			}
+		});
 		btnEliminar.setLayout(null);
 		btnEliminar.setBackground(new Color(12, 138, 199));
 		btnEliminar.setBounds(767, 508, 122, 35);
@@ -506,20 +599,7 @@ public class Busqueda extends JFrame {
 			modelo.addRow(nuevaFila);
 		}
 	}
-	
-	private Integer[] casillaSeleccionada(JTable table) {
-		Integer[] resultado = new Integer[2];
-		
-		resultado[0] = table.getSelectedRow();
-		
-		if (resultado[0] != -1) {
-			resultado[1] = (int) table.getValueAt(resultado[0], 0);
-		} else {
-			resultado[1] = -1;
-		}
-		
-		return resultado;
-	}
+
 	
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {

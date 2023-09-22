@@ -1,6 +1,9 @@
 package com.hotelAlura.controller;
 
+import java.sql.PreparedStatement;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import com.hotelAlura.dao.HuespedesDAO;
 import com.hotelAlura.factory.ConnectionFactory;
@@ -34,5 +37,10 @@ public class HuespedesController {
 	public void editar(Huespedes huesped) {
 		this.huespedesDAO.editar(huesped);
 	}
+	
+	public void eliminar(Integer id) {
+		this.huespedesDAO.eliminar(id);
+	}
+	
 
 }

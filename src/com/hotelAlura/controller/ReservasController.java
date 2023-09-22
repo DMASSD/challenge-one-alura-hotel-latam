@@ -33,5 +33,9 @@ public class ReservasController {
 		reservasDAO.editar(reserva);
 	}
 	
+	public void eliminar(List<Integer> idList) {
+		reservasDAO.eliminar(idList);
+	}
+	
 	
 }

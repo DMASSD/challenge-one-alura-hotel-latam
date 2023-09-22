@@ -193,6 +193,46 @@ public class ReservasDAO {
 		
 	}
 	
-	
+	public void eliminar(List<Integer> idList){
+		
+		String finalQuery = "";
+		
+		if (!idList.isEmpty()) {
+		    StringBuilder queryBuilder = new StringBuilder("DELETE FROM reservas WHERE 1=1 AND ");
+		    
+		    idList.forEach(id -> queryBuilder.append("id = ").append(id).append(" OR "));
+		    
+		    queryBuilder.setLength(queryBuilder.length() - 4);
+		    
+		    finalQuery = queryBuilder.toString();
+
+		} else {
+			JOptionPane.showMessageDialog(
+            		null,
+            		"No se selecciono ninguna reserva a eliminar",
+            		"Advertencia",
+            		JOptionPane.WARNING_MESSAGE);
+		}
+
+		
+		try(con){
+						
+			final PreparedStatement statement = con.prepareStatement(finalQuery);
+			
+			try(statement){
+				
+				statement.execute();
+				
+			}
+			
+		}catch (Exception e) {
+			JOptionPane.showMessageDialog(
+            		null,
+            		"Error al eliminar la reserva de la base de datos, contactar con soporte",
+            		"Advertencia",
+            		JOptionPane.WARNING_MESSAGE);			
+			throw new RuntimeException(e);
+		}
+	}
 	
 }
