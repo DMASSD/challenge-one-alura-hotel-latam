@@ -30,5 +30,9 @@ public class HuespedesController {
 	public List<Huespedes> busqueda(String nombre){
 		return this.huespedesDAO.busqueda(nombre);
 	}
+	
+	public void editar(Huespedes huesped) {
+		this.huespedesDAO.editar(huesped);
+	}
 
 }

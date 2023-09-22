@@ -186,4 +186,41 @@ public class HuespedesDAO {
 		return resultado;
 	}
 
+	public void editar(Huespedes huesped){
+		
+		try(con) {
+						
+			final PreparedStatement statement = con.prepareStatement(
+					 "UPDATE huespedes "
+					+"SET nombre = ?, apellido = ?, "
+					+"fecha_de_nacimiento = ?, nacionalidad = ?, "
+					+"telefono = ?, reserva_actual = ? "
+					+"WHERE id = ?"); 
+			
+			try(statement) {
+				
+				statement.setString(1, huesped.getNombre());
+				statement.setString(2, huesped.getApellido());
+				statement.setDate(3, huesped.getFecha_de_nacimientoSQL());
+				statement.setString(4, huesped.getNacionalidad());
+				statement.setString(5, huesped.getTelefono());	
+				statement.setInt(6, huesped.getReservacion_actual());	
+				statement.setInt(7, huesped.getId());
+				
+				statement.execute();
+							    
+				}
+			
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(
+            		null,
+            		"Error al editar informacion del huesped en la base de datos, contactar con soporte",
+            		"Advertencia",
+            		JOptionPane.WARNING_MESSAGE);			
+			throw new RuntimeException(e);
+		}
+		
+	}
+	
+	
 }

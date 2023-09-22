@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTabbedPane;
@@ -33,7 +34,10 @@ import javax.swing.ListSelectionModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Date;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 @SuppressWarnings("serial")
 public class Busqueda extends JFrame {
@@ -269,6 +273,12 @@ public class Busqueda extends JFrame {
 						
 						modelo.addRow(nuevaFila);
 					}
+				}else {
+					JOptionPane.showMessageDialog(
+		            		null,
+		            		"Ninguna persona con ese nombre o apellido se ha registrado",
+		            		"Advertencia",
+		            		JOptionPane.WARNING_MESSAGE);	
 				}
 				
 				
@@ -290,6 +300,98 @@ public class Busqueda extends JFrame {
 		lblBuscar.setFont(new Font("Roboto", Font.PLAIN, 18));
 		
 		JPanel btnEditar = new JPanel();
+		btnEditar.addMouseListener(new MouseAdapter() { //TODO
+			@Override
+			public void mouseClicked(MouseEvent e) {
+					
+				int selectedRow;
+				int selectedIndex = panel.getSelectedIndex();
+
+				switch (selectedIndex) {
+				
+					case 0:
+												
+						selectedRow = tbReservas.getSelectedRow();
+												
+						if (selectedRow != -1) {
+							
+							NumberFormat formatoDinero = NumberFormat.getCurrencyInstance();
+
+					        String numeroFormateado = new String ((String)tbReservas.
+					        		getValueAt(selectedRow,3)).replaceAll("\\s", "");
+					        
+					        Number numeroDesformateado = 0;
+					        
+							try {
+								numeroDesformateado = formatoDinero.parse(numeroFormateado);
+							} catch (ParseException e1) {}
+
+							Reservas reserva = new Reservas(
+								(Integer)tbReservas.getValueAt(selectedRow,0),
+								(Date) tbReservas.getValueAt(selectedRow,1),
+								(Date)tbReservas.getValueAt(selectedRow,2),
+								numeroDesformateado.doubleValue(),
+								(String)tbReservas.getValueAt(selectedRow,4),
+								(Integer)tbReservas.getValueAt(selectedRow,5)
+									);
+							
+							ReservasController reservasController = new ReservasController();
+							
+							reservasController.editar(reserva);
+							
+							cargarTablaReservasCompleta(modelo);
+							
+				            JOptionPane.showMessageDialog(null,"Reservacion editada con exito");
+
+							
+						} else {
+							JOptionPane.showMessageDialog(
+				            		null,
+				            		"Seleccione una casilla para editar",
+				            		"Advertencia",
+				            		JOptionPane.WARNING_MESSAGE);	
+						}
+						
+						break;
+	
+					case 1:
+						
+						selectedRow = tbHuespedes.getSelectedRow();
+						
+						if (selectedRow != -1) {
+							
+							Huespedes huesped = new Huespedes(
+								(int)tbHuespedes.getValueAt(selectedRow,0),
+								(String) tbHuespedes.getValueAt(selectedRow,1),
+								(String) tbHuespedes.getValueAt(selectedRow,2),
+								(Date)tbHuespedes.getValueAt(selectedRow,3),
+								(String)tbHuespedes.getValueAt(selectedRow,4),
+								(String)tbHuespedes.getValueAt(selectedRow,5),
+								(Integer)tbHuespedes.getValueAt(selectedRow,6)
+									);
+							
+							HuespedesController huespedesController = new HuespedesController();
+							
+							huespedesController.editar(huesped);
+							
+							cargarTablaReservasCompleta(modelo);	
+							
+				            JOptionPane.showMessageDialog(null,"Informacion del huesped editada con exito");
+
+						}
+						
+						break;	
+					default:
+						JOptionPane.showMessageDialog(
+			            		null,
+			            		"Seleccione una ventana y un dato para editar",
+			            		"Advertencia",
+			            		JOptionPane.WARNING_MESSAGE);	
+						break;
+				}
+
+			}
+		});
 		btnEditar.setLayout(null);
 		btnEditar.setBackground(new Color(12, 138, 199));
 		btnEditar.setBounds(635, 508, 122, 35);
@@ -322,10 +424,7 @@ public class Busqueda extends JFrame {
 		btnRecargar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
-				modelo.setRowCount(0);
-				modeloHuesped.setRowCount(0);
-	
+
 				cargarTablaReservasCompleta(modelo);
 				cargarTablaHuespedesCompleta(modeloHuesped);
 			}
@@ -346,6 +445,8 @@ public class Busqueda extends JFrame {
 	}
 
 	private void cargarTablaHuespedesCompleta(DefaultTableModel modelo) {
+		modeloHuesped.setRowCount(0);
+		
 		HuespedesController huespedesController = new HuespedesController();
 		List<Huespedes> allHuespedes = huespedesController.listarTodo();
 		
@@ -364,6 +465,8 @@ public class Busqueda extends JFrame {
 	}
 
 	private void cargarTablaReservasCompleta(DefaultTableModel modelo) {
+		modelo.setRowCount(0);
+		
 		ReservasController reservasController = new ReservasController();
 		List<Reservas> allReservas = reservasController.listarTodo();
 		
@@ -379,6 +482,20 @@ public class Busqueda extends JFrame {
 			
 			modelo.addRow(nuevaFila);
 		}
+	}
+	
+	private Integer[] casillaSeleccionada(JTable table) {
+		Integer[] resultado = new Integer[2];
+		
+		resultado[0] = table.getSelectedRow();
+		
+		if (resultado[0] != -1) {
+			resultado[1] = (int) table.getValueAt(resultado[0], 0);
+		} else {
+			resultado[1] = -1;
+		}
+		
+		return resultado;
 	}
 	
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"

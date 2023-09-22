@@ -11,6 +11,7 @@ public class Reservas {
 	private String formato_de_pago;
 	private Integer id_huesped;
 	
+	
 	public Reservas(Date fecha_entrada, Date fecha_salida,
 			Double valor, String formato_de_pago) {
 		this.fecha_entrada = fecha_entrada;

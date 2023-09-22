@@ -160,4 +160,39 @@ public class ReservasDAO {
 		
 	}
 
+	public void editar(Reservas reserva){
+		
+		try(con) {
+			
+			final PreparedStatement statement = con.prepareStatement(
+					 "UPDATE reservas "
+					+"SET fecha_entrada = ?, fecha_salida = ?, "
+					+"valor = ?, formato_de_pago = ? "
+					+"WHERE id = ?"); 
+			
+			try(statement) {
+				
+				statement.setDate(1, reserva.getFecha_entradaSQL());
+				statement.setDate(2, reserva.getFecha_salidaSQL());
+				statement.setDouble(3,reserva.getValor());
+				statement.setString(4, reserva.getFormato_de_pago());	
+				statement.setInt(5, reserva.getId());	
+				
+				statement.execute();
+							    
+				}
+			
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(
+            		null,
+            		"Error al editar la reserva en la base de datos, contactar con soporte",
+            		"Advertencia",
+            		JOptionPane.WARNING_MESSAGE);			
+			throw new RuntimeException(e);
+		}
+		
+	}
+	
+	
+	
 }

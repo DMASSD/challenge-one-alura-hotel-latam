@@ -29,5 +29,9 @@ public class ReservasController {
 		return reservasDAO.busquedaPorIdHuesped(huespedes);
 	}
 	
+	public void editar(Reservas reserva) {
+		reservasDAO.editar(reserva);
+	}
+	
 	
 }
