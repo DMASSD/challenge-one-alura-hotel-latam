@@ -23,7 +23,7 @@ En resumen, el código que se desarrollo es una aplicación de gestión hotelera
 
 Si bien este proyecto/Challenge llevo mucho trabajo, es necesario indicar que solo se realizo la parte BackEnd junto con algunos cambios y mejoras al proyecto original.
 
-🔹 [Link del proyecto FrontEnd original]([https://toedter.com/jcalendar/](https://github.com/alura-challenges/challenge-one-alura-hotel-latam))
+🔹 [Link del proyecto FrontEnd original](https://github.com/alura-challenges/challenge-one-alura-hotel-latam)
 
 ---
 
